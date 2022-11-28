@@ -42,7 +42,7 @@ export class UsersController {
     });
   }
 
-  @Post()
+  @Post('purchase')
   @UseGuards(JwtAuthGuard)
   modifySubscription(@Request() req, @Body() body: UpdateSubscription) {
     this.logger.debug(body.subscription_id);

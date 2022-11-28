@@ -22,8 +22,8 @@ function extractSize(rawData) {
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         type: 'mysql',
-        host: 'localhost',
-        port: 3306,
+        host: configService.get('DATABASE_HOST'),
+        port: configService.get<number>('DATABASE_PORT'),
         username: configService.get('DATABASE_USER'),
         password: configService.get('DATABASE_PASSWORD'),
         database: configService.get('DATABASE_NAME'),

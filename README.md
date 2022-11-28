@@ -1,73 +1,80 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Subscription Service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Running
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+To run the application follow these steps:
 
-## Description
+- Create a copy of the [`.envcopy`](.envcopy) file with the name `.env`
+- Change the values to your MySQL instance values (The user should have permissions to create tables). e.g;
+```dotenv
+DATABASE_USER=user
+DATABASE_PASSWORD=p4ssw0rd
+DATABASE_NAME=subscription
+DATABASE_PORT=3306
+DATABASE_HOST=localhost
+JWT_SECRET=SUPER_SECRET_KEY
+```
+- Run the command ```npm install```
+- Run the command ```npm run start:dev```
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The application should be ready in your localhost port 3000                  
 
-## Installation
+## Using the application
 
-```bash
-$ npm install
+The examples in this document will use `curl`, you can use any tool that you prefer to interact with the API
+
+### Listing all subscriptions
+
+```shell
+curl -XGET 'localhost:3000/subscription'
+```
+```json
+[{"id":1,"name":"ZumCare","cost":10},{"id":2,"name":"ZumCare+","cost":20}]
 ```
 
-## Running the app
+### Login
 
-```bash
-# development
-$ npm run start
+The application has 3 users that you can try:
 
-# watch mode
-$ npm run start:dev
+| Username | Password |
+|----------|----------|
+| Mario    | pass123! |
+| Ari      | pass123! |
+| Veronika | pass123! |
 
-# production mode
-$ npm run start:prod
+Use the username and password as body: `{"username":"Mario", "password": "pass123!"}`
+
+```shell
+curl -XPOST -H "Content-type: application/json" -d '{"username":"Mario", "password": "pass123!"}' 'localhost:3000/auth/login'
+```
+It will return an access token 
+
+```json
+{"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hcmlvIiwic3ViIjoxLCJpYXQiOjE2Njk2MDQ4NjgsImV4cCI6MTY2OTYwNTQ2OH0.-6ASD-kfCnr_OAnFF8McK-wqsqN-ZnKpuwRwH7yA--o"}
 ```
 
-## Test
+### List user information
 
-```bash
-# unit tests
-$ npm run test
+Use the access token as authorisation bearer. 
+The token contains the user id information, therefore doesn't need an additional parameter and add increased security
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```shell
+curl -XGET -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hcmlvIiwic3ViIjoxLCJpYXQiOjE2Njk2MDQ4NjgsImV4cCI6MTY2OTYwNTQ2OH0.-6ASD-kfCnr_OAnFF8McK-wqsqN-ZnKpuwRwH7yA--o' -H "Content-type: application/json" 'localhost:3000/users'
 ```
 
-## Support
+```json
+{"id":1,"name":"Mario","subscription":null}
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Purchase subscription
 
-## Stay in touch
+Use the access token as authorisation bearer.      
+As the body use the subscription id `{"subscription_id": 1}`
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```shell
+curl -XPOST -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ik1hcmlvIiwic3ViIjoxLCJpYXQiOjE2Njk2MDU1NDcsImV4cCI6MTY2OTYwNjE0N30.xq4SMI4Ztz5Y8ZZwcpRdKHgpeMCEFFAOesCFrdkBOlk' -H "Content-type: application/json" -d '{"subscription_id":1}' 'localhost:3000/users/purchase'
+```
 
-## License
-
-Nest is [MIT licensed](LICENSE).
+```json
+{"id":1,"name":"Mario","subscription":{"id":1,"name":"ZumCare","cost":10}}
+```
