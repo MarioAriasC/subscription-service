@@ -25,6 +25,8 @@ The examples in this document will use `curl`, you can use any tool that you pre
 
 ### Listing all subscriptions
 
+`GET http://localhost:3000/subscription`
+
 ```shell
 curl -XGET 'localhost:3000/subscription'
 ```
@@ -33,6 +35,8 @@ curl -XGET 'localhost:3000/subscription'
 ```
 
 ### Login
+
+`POST http://localhost:3000/auth/login`                                        
 
 The application has 3 users that you can try:
 
@@ -55,6 +59,8 @@ It will return an access token
 
 ### List user information
 
+`GET http://localhost:3000/users`
+
 Use the access token as authorisation bearer. 
 The token contains the user id information, therefore doesn't need an additional parameter and add increased security
 
@@ -67,6 +73,8 @@ curl -XGET -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2
 ```
 
 ### Purchase subscription
+
+`POST GET http://localhost:3000/users/purchase`
 
 Use the access token as authorisation bearer.      
 As the body use the subscription id `{"subscription_id": 1}`
