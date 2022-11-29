@@ -70,10 +70,10 @@ function extractSize(rawData) {
             `insert into users(name, password) values('Mario', 'pass123!')`,
           );
           await dataSource.query(
-            `insert into users(name, password) values('Ari', 'pass123!')`,
+            `insert into users(name, password) values('Andy', 'pass123!')`,
           );
           await dataSource.query(
-            `insert into users(name, password) values('Veronika', 'pass123!')`,
+            `insert into users(name, password) values('Camile', 'pass123!')`,
           );
         };
         dataSource

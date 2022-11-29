@@ -39,8 +39,8 @@ The application has 3 users that you can try:
 | Username | Password |
 |----------|----------|
 | Mario    | pass123! |
-| Ari      | pass123! |
-| Veronika | pass123! |
+| Andy     | pass123! |
+| Camile   | pass123! |
 
 Use the username and password as body: `{"username":"Mario", "password": "pass123!"}`
 
